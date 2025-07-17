@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import useAuth from '../hooks/useAuth';
 
 const Register = () => {
@@ -24,7 +24,7 @@ const Register = () => {
       setError('Passwords do not match');
     } else {
       try {
-        const res = await axios.post('/api/auth/register', formData);
+        const res = await api.post('/auth/register', formData);
         console.log('Registration successful:', res.data);
         
         registerContext(res.data.token);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import useAuth from '../hooks/useAuth';
 import { GoogleLogin } from '@react-oauth/google';
 
@@ -18,7 +18,7 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('/api/auth/login', formData);
+      const res = await api.post('/auth/login', formData);
       console.log('Login successful:', res.data);
       
       loginContext(res.data.token);
@@ -31,7 +31,7 @@ const Login = () => {
   const googleSuccess = async (res) => {
     const idToken = res.credential;
     try {
-      const response = await axios.post('/api/auth/googlelogin', { idToken });
+      const response = await api.post('/auth/googlelogin', { idToken });
       loginContext(response.data.token);
       window.location.href = '/tasks';
     } catch (error) {

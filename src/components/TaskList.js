@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 import io from 'socket.io-client';
 import useAuth from '../hooks/useAuth';
 import {
@@ -85,7 +85,7 @@ const TaskList = () => {
       }
       try {
         setLoading(true);
-        const response = await axios.get('/api/tasks', {
+        const response = await api.get('/tasks', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -108,8 +108,11 @@ const TaskList = () => {
 
   // --- REAL-TIME UPDATES with Socket.IO ---
   useEffect(() => {
-    if (!user?._id) return; // Don't connect if we don't have a user ID
-    const socket = io('http://localhost:5000', {
+    if (!user?._id) return;
+    const socketURL = process.env.NODE_ENV === 'production'
+      ? process.env.REACT_APP_SOCKET_URL
+      : 'http://localhost:5000';
+    const socket = io(socketURL, {
       query: { userId: user._id }
     });
     
@@ -143,9 +146,9 @@ const TaskList = () => {
 
     try {
         if (isUpdating) {
-            await axios.put(`/api/tasks/${newTask._id}`, taskData, { headers: { Authorization: `Bearer ${token}` } });
+            await api.put(`/tasks/${newTask._id}`, taskData, { headers: { Authorization: `Bearer ${token}` } });
         } else {
-            await axios.post('/api/tasks', taskData, { headers: { Authorization: `Bearer ${token}` } });
+            await api.post('/tasks', taskData, { headers: { Authorization: `Bearer ${token}` } });
         }
         setNewTask(initialFormState); // Reset form on success
     } catch (err) {
@@ -170,7 +173,7 @@ const TaskList = () => {
     setError('');
     if (window.confirm('Are you sure you want to delete this task?')) {
         try {
-            await axios.delete(`/api/tasks/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+            await api.delete(`/tasks/${id}`, { headers: { Authorization: `Bearer ${token}` } });
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to delete task.');
         }
@@ -197,7 +200,7 @@ const TaskList = () => {
 
             if (movedTask.status !== newStatus) {
                 const updatedTask = { ...movedTask, status: newStatus };
-                axios.put(`/api/tasks/${movedTask._id}`, updatedTask, {
+                api.put(`/tasks/${movedTask._id}`, updatedTask, {
                     headers: { Authorization: `Bearer ${token}` }
                 }).catch(err => {
                     console.error("Failed to update task status:", err);

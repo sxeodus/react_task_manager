@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const AuthContext = createContext();
 
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
         setToken(storedToken);
         setIsLoggedIn(true);
           try {
-            const response = await axios.get('/api/auth/me', {
+            const response = await api.get('/auth/me', {
               headers: { Authorization: `Bearer ${storedToken}` },
             });
             setUser(response.data.data);

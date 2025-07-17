@@ -15,7 +15,7 @@ const PrivateRoute = ({ children }) => {
   return token ? children : <Navigate to="/login" />;
 };
 
-const GOOGLE_CLIENT_ID = "25723478688-2gm62khjtgurnapt1oa82jels91lc7et.apps.googleusercontent.com";
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 
 const App = () => (

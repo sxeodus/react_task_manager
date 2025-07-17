@@ -16,7 +16,11 @@ app.set('io', io);
 
 app.use(express.json());
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/tasks', require('./routes/tasks'));
