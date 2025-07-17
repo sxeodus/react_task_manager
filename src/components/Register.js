@@ -26,7 +26,7 @@ const Register = () => {
       try {
         const res = await axios.post('/api/auth/register', formData);
         console.log('Registration successful:', res.data);
-        // Store the token in local storage (or a context, see step 3)
+        
         registerContext(res.data.token);
         window.location.href = '/tasks';
       } catch (err) {
@@ -36,7 +36,7 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div className="auth-form-container">
       <h2>Register</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={onSubmit}>

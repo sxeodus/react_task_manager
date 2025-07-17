@@ -19,14 +19,13 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-// A constant for the initial, empty state of the form
 const initialFormState = {
   title: '',
   description: '',
   deadline: '',
   priority: 1,
   status: 'todo',
-  _id: null, // This being null means we are in "add" mode
+  _id: null,
 };
 
 // A separate component for each sortable task item. This is a cleaner pattern.
@@ -110,7 +109,6 @@ const TaskList = () => {
   // --- REAL-TIME UPDATES with Socket.IO ---
   useEffect(() => {
     if (!user?._id) return; // Don't connect if we don't have a user ID
-
     const socket = io('http://localhost:5000', {
       query: { userId: user._id }
     });
@@ -126,14 +124,12 @@ const TaskList = () => {
     socket.on('taskDeleted', (deletedTaskId) => {
       setTasks(prev => prev.filter(t => t._id !== deletedTaskId));
     });
-
-    // Cleanup on component unmount
     return () => socket.disconnect();
   }, [user]);
 
   // --- FORM AND CRUD HANDLERS ---
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     setNewTask((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -164,7 +160,6 @@ const TaskList = () => {
       ...task,
       deadline: task.deadline ? new Date(task.deadline).toISOString().split('T')[0] : '',
     });
-    // Scroll to the form for a better user experience
     const form = document.querySelector('.add-task-form');
     if (form) {
         form.scrollIntoView({ behavior: 'smooth' });
@@ -192,50 +187,41 @@ const TaskList = () => {
     setError('');
   }
 
-  // --- DRAG-AND-DROP HANDLER ---
   const handleDragEnd = (event) => {
     const { active, over } = event;    if (over && active.id !== over.id) {
         setTasks(items => {
             const oldIndex = items.findIndex(item => item._id === active.id);
-            const newIndex = items.findIndex(item => item._id === over.id);
-
+            const newIndex = items.findIndex(item => item._id === over.id);            
             const movedTask = items[oldIndex];
             const newStatus = items[newIndex].status;
 
-            // If the task is moved to a new status column
             if (movedTask.status !== newStatus) {
-                // Update the task's status
                 const updatedTask = { ...movedTask, status: newStatus };
                 axios.put(`/api/tasks/${movedTask._id}`, updatedTask, {
                     headers: { Authorization: `Bearer ${token}` }
                 }).catch(err => {
                     console.error("Failed to update task status:", err);
-                    setError("Failed to update task status.");
-                    // Optionally, revert the UI change in case of an error
+                    setError("Failed to update task status.");                    
                     return items;
-                });
+                  });
 
-                // Update the tasks array with the modified task
                 return items.map(item => item._id === movedTask._id ? updatedTask : item);
             } else {
-                // Reorder tasks within the same column
                 return arrayMove(items, oldIndex, newIndex);
             }
         });
     }
   };
 
-  // --- RENDER LOGIC ---
   if (loading) {
     return <div className="task-list-page">Loading tasks...</div>;
   }
   
-  // --- PROGRESS CALCULATION ---
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter(task => task.status === 'done').length;
   const completionPercentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
 
-  // Group tasks by status for column rendering
+  
   const statusOrder = ['todo', 'in-progress', 'done'];
   const tasksByStatus = statusOrder.reduce((acc, status) => {
     acc[status] = tasks.filter(task => task.status === status);
@@ -255,7 +241,6 @@ const TaskList = () => {
       
       <div className="progress-container">
         <div className="progress-bar" style={{ width: `${completionPercentage}%` }}>
-            {/* Show percentage only if it's wide enough */}
             {completionPercentage > 10 && `${Math.round(completionPercentage)}%`}
         </div>
       </div>

@@ -5,11 +5,11 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import './App.css';
 import Login from './components/Login';
-import TaskList from './components/TaskList'; // Rename your original App to TaskList
+import TaskList from './components/TaskList'; 
 import Home from './components/Home';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-// Dummy component for the protected route, now using AuthContext
+
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/login" />;
@@ -17,7 +17,7 @@ const PrivateRoute = ({ children }) => {
 
 const GOOGLE_CLIENT_ID = "25723478688-2gm62khjtgurnapt1oa82jels91lc7et.apps.googleusercontent.com";
 
-// Main App component with routing
+
 const App = () => (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         <AuthProvider>

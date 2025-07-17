@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
             setUser(response.data.data);
           } catch (error) {
             console.error("Error fetching user data:", error);
-            localStorage.removeItem('token'); // Clear invalid token
+            localStorage.removeItem('token'); 
             setToken(null);
             setIsLoggedIn(false);
             setUser(null);

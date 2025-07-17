@@ -4,26 +4,20 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
-// Load env vars
 dotenv.config();
 
-// Connect to database
 connectDB();
 
 const app = express()
 const server = http.createServer(app);
 const io = require('socket.io')(server, { cors: { origin: '*' } });
 
-// Make io accessible to our router
 app.set('io', io);
 
-// Body parser middleware
 app.use(express.json());
 
-// Enable CORS
 app.use(cors());
 
-// Mount routers
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/tasks', require('./routes/tasks'));
 

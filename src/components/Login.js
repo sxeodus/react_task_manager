@@ -20,7 +20,7 @@ const Login = () => {
     try {
       const res = await axios.post('/api/auth/login', formData);
       console.log('Login successful:', res.data);
-      // Store the token (or use context)
+      
       loginContext(res.data.token);
       window.location.href = '/tasks';
     } catch (err) {
@@ -46,7 +46,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="auth-form-container">
       <h2>Login</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={onSubmit}>
