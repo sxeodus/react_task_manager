@@ -7,12 +7,19 @@ import './App.css';
 import Login from './components/Login';
 import TaskList from './components/TaskList'; 
 import Home from './components/Home';
+import useAuth from './hooks/useAuth';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/login" />;
+  const { isLoggedIn, loading } = useAuth();
+
+  if (loading) {
+    // While checking auth, you can show a loading spinner or simply nothing.
+    return <div>Loading...</div>;
+  }
+
+  return isLoggedIn ? children : <Navigate to="/login" />;
 };
 
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;

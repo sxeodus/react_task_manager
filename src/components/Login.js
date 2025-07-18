@@ -23,7 +23,7 @@ const Login = () => {
       const res = await api.post('/auth/login', formData);
       console.log('Login successful:', res.data);
       
-      loginContext(res.data.token);
+      await loginContext(res.data.token);
       navigate('/tasks');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
@@ -34,7 +34,7 @@ const Login = () => {
     const idToken = res.credential;
     try {
       const response = await api.post('/auth/googlelogin', { idToken });
-      loginContext(response.data.token);
+      await loginContext(response.data.token);
       navigate('/tasks');
     } catch (error) {
       console.error(error);

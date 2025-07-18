@@ -33,10 +33,19 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const login = (token) => {
-    localStorage.setItem('token', token);
-    setToken(token);
+  const login = async (newToken) => {
+    localStorage.setItem('token', newToken);
+    setToken(newToken);
     setIsLoggedIn(true);
+    try {
+      const response = await api.get('/auth/me', {
+        headers: { Authorization: `Bearer ${newToken}` },
+      });
+      setUser(response.data.data);
+    } catch (error) {
+      console.error("Error fetching user data after login:", error);
+      logout();
+    }
   };
 
   const logout = () => {

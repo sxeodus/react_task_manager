@@ -15,6 +15,7 @@ const Register = () => {
     matchPassword: '',
   });
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { firstName, lastName, username, email, password, matchPassword } = formData;
 
@@ -22,17 +23,21 @@ const Register = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     if (password !== matchPassword) {
       setError('Passwords do not match');
     } else {
+      setIsSubmitting(true);
       try {
         const res = await api.post('/auth/register', formData);
         console.log('Registration successful:', res.data);
         
-        registerContext(res.data.token);
+        await registerContext(res.data.token);
         navigate('/tasks');
       } catch (err) {
         setError(err.response?.data?.message || 'Registration failed');
+        setIsSubmitting(false);
       }
     }
   };
@@ -48,7 +53,7 @@ const Register = () => {
         <input type="email" name="email" value={email} onChange={onChange} placeholder="Email" required />
         <input type="password" name="password" value={password} onChange={onChange} placeholder="Password" required />
         <input type="password" name="matchPassword" value={matchPassword} onChange={onChange} placeholder="Confirm Password" required />
-        <button type="submit">Register</button>
+        <button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Registering...' : 'Register'}</button>
       </form>
     </div>
   );
