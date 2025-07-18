@@ -65,7 +65,7 @@ const Login = () => {
         <hr />
         <GoogleLogin
             onSuccess={googleSuccess}
-            onError={googleFailure}
+            onError={googleFailure} // This was missing
         />
       </form>
     </div>
