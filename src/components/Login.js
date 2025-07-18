@@ -37,6 +37,7 @@ const Login = () => {
 
   const googleSuccess = async (res) => {
     const idToken = res.credential;
+    setIsSubmitting(true);
     try {
       const response = await api.post('/auth/googlelogin', { idToken });
       await loginContext(response.data.token);
