@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import api from '../api';
 import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const { login: loginContext } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -22,7 +24,7 @@ const Login = () => {
       console.log('Login successful:', res.data);
       
       loginContext(res.data.token);
-      window.location.href = '/tasks';
+      navigate('/tasks');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
@@ -33,7 +35,7 @@ const Login = () => {
     try {
       const response = await api.post('/auth/googlelogin', { idToken });
       loginContext(response.data.token);
-      window.location.href = '/tasks';
+      navigate('/tasks');
     } catch (error) {
       console.error(error);
       setError('Google Login Failed');

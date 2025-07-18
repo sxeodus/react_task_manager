@@ -39,12 +39,6 @@ export const AuthProvider = ({ children }) => {
     setIsLoggedIn(true);
   };
 
-  const register = (newToken) => {
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
-    setIsLoggedIn(true);
-  };
-
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
@@ -58,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     isLoggedIn,
     loading,
     login,
-    register,
+    register: login, // Alias register to login for components that use it
     logout,
   };
 

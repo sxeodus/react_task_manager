@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import api from '../api';
 import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const { register: registerContext } = useAuth();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -28,7 +30,7 @@ const Register = () => {
         console.log('Registration successful:', res.data);
         
         registerContext(res.data.token);
-        window.location.href = '/tasks';
+        navigate('/tasks');
       } catch (err) {
         setError(err.response?.data?.message || 'Registration failed');
       }

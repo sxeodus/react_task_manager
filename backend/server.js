@@ -10,16 +10,17 @@ connectDB();
 
 const app = express()
 const server = http.createServer(app);
-const io = require('socket.io')(server, { cors: { origin: '*' } });
-
-app.set('io', io);
-
-app.use(express.json());
 
 const corsOptions = {
   origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
   optionsSuccessStatus: 200
 };
+
+const io = require('socket.io')(server, { cors: corsOptions });
+
+app.set('io', io);
+
+app.use(express.json());
 app.use(cors(corsOptions));
 
 app.use('/api/auth', require('./routes/auth'));
