@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 import io from 'socket.io-client';
 import useAuth from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import {
   DndContext,
   closestCenter,
@@ -67,6 +68,7 @@ const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState(initialFormState);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   
   const sensors = useSensors(
@@ -182,7 +184,7 @@ const TaskList = () => {
   
   const handleLogout = () => {
       logout();
-      window.location.href = '/login';
+      navigate('/login');
   }
   
   const cancelEdit = () => {
