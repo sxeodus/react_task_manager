@@ -17,7 +17,7 @@ app.set('io', io);
 app.use(express.json());
 
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN,
+  origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : '*',
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
