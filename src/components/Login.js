@@ -12,6 +12,7 @@ const Login = () => {
     password: '',
   });
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { email, password } = formData;
 
@@ -19,6 +20,9 @@ const Login = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       const res = await api.post('/auth/login', formData);
       console.log('Login successful:', res.data);
@@ -27,6 +31,7 @@ const Login = () => {
       navigate('/tasks');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
+      setIsSubmitting(false);
     }
   };
 
@@ -38,6 +43,7 @@ const Login = () => {
       navigate('/tasks');
     } catch (error) {
       console.error(error);
+      setIsSubmitting(false);
       setError('Google Login Failed');
     }
   };
@@ -54,7 +60,7 @@ const Login = () => {
       <form onSubmit={onSubmit}>
         <input type="email" name="email" value={email} onChange={onChange} placeholder="Email" required />
         <input type="password" name="password" value={password} onChange={onChange} placeholder="Password" required />
-        <button type="submit">Login</button>
+        <button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Logging in...' : 'Login'}</button>
         <hr />
         <GoogleLogin
             onSuccess={googleSuccess}
