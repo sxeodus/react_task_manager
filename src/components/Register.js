@@ -27,6 +27,8 @@ const Register = () => {
 
     if (password !== matchPassword) {
       setError('Passwords do not match');
+    } else if (password.length < 6) {
+      setError('Password must be at least 6 characters long');
     } else {
       setIsSubmitting(true);
       try {
