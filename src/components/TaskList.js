@@ -212,7 +212,15 @@ const TaskList = () => {
 
                 return items.map(item => item._id === movedTask._id ? updatedTask : item);
             } else {
-                return arrayMove(items, oldIndex, newIndex);
+                const reorderedTasks = arrayMove(items, oldIndex, newIndex);
+                const taskIds = reorderedTasks.map(t => t._id);
+                api.put('/tasks/reorder', { tasks: taskIds }, {
+                  headers: { Authorization: `Bearer ${token}` }
+                }).catch(err => {
+                  console.error("Failed to reorder tasks:", err);
+                  setError("Failed to save new task order.");
+                });
+                return reorderedTasks;
             }
         });
     }
